@@ -1,12 +1,37 @@
 import { Hero } from '../hero';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+
+import { HeroService } from '../hero.service';
 
 @Component({
   selector: 'app-hero-detail',
   templateUrl: './hero-detail.component.html',
   styleUrls: ['./hero-detail.component.css']
 })
-export class HeroDetailComponent {
+export class HeroDetailComponent implements OnInit {
   // It is like declare "props"
   @Input() hero?: Hero;
+
+  constructor(
+    // Holds information about the router to this instace of HeroDetailComponent
+    private route: ActivatedRoute,
+    private heroService: HeroService,
+    // Service for interacting with the browser, like navigating
+    private location: Location
+  ) { }
+
+  ngOnInit(): void {
+    this.getHero();
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+
+  getHero(): void {
+    const id = Number(this.route.snapshot.paramMap.get('id'));
+    this.heroService.getHero(id).subscribe(hero => this.hero = hero)
+  }
 }
