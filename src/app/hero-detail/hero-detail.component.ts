@@ -12,7 +12,7 @@ import { HeroService } from '../hero.service';
 })
 export class HeroDetailComponent implements OnInit {
   // It is like declare "props"
-  @Input() hero?: Hero;
+  hero: Hero | undefined;
 
   constructor(
     // Holds information about the router to this instace of HeroDetailComponent
@@ -24,6 +24,11 @@ export class HeroDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.getHero();
+  }
+
+  save(): void {
+    if (!this.hero) return;
+    this.heroService.updateHero(this.hero).subscribe(() => this.goBack())
   }
 
   goBack(): void {
